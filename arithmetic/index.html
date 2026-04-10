@@ -4,46 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMV | Arithmetic Trainer</title>
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="trainer.css">
     <link rel="icon" type="image/x-icon" href="../IMVyt.ico">
 </head>
 <body>
 
     <div id="settings-view" class="container">
-        <h1>Arithmetic Trainer</h1>
-        <p class="description">
+        <h1 class="company-name" style="text-align: left;">Arithmetic Trainer</h1>
+        <p class="footer-note">
             A fast-paced drill. Solve as many problems as you can before time runs out.
         </p>
 
         <div class="settings-grid">
             <div class="option">
-                <input type="checkbox" id="add" checked> <label for="add">Addition</label>
-                <div class="range">Range: (<input type="number" id="add-min" value="2"> to <input type="number" id="add-max" value="100">)</div>
+                <input type="checkbox" id="add" checked> <label for="add"><strong>Addition</strong></label>
+                <div class="link-date">Range: (<input type="number" id="add-min" value="2"> to <input type="number" id="add-max" value="100">)</div>
             </div>
             <div class="option">
-                <input type="checkbox" id="sub" checked> <label for="sub">Subtraction</label>
-                <div class="range">Range: Result must be positive.</div>
+                <input type="checkbox" id="sub" checked> <label for="sub"><strong>Subtraction</strong></label>
+                <div class="link-date">Range: Result must be positive.</div>
             </div>
             <div class="option">
-                <input type="checkbox" id="mult" checked> <label for="mult">Multiplication</label>
-                <div class="range">Range: (<input type="number" id="mult-min" value="2"> to <input type="number" id="mult-max" value="12">) &times; (2 to 100)</div>
+                <input type="checkbox" id="mult" checked> <label for="mult"><strong>Multiplication</strong></label>
+                <div class="link-date">Range: (<input type="number" id="mult-min" value="2"> to <input type="number" id="mult-max" value="12">) &times; (2 to 100)</div>
             </div>
             <div class="option">
-                <input type="checkbox" id="div" checked> <label for="div">Division</label>
-                <div class="range">Multiplication problems in reverse.</div>
+                <input type="checkbox" id="div" checked> <label for="div"><strong>Division</strong></label>
+                <div class="link-date">Multiplication problems in reverse.</div>
             </div>
         </div>
 
+        <hr>
+
         <div class="footer-settings">
-            Duration: 
-            <select id="duration">
+            <span style="font-size: 14px;">Duration:</span> 
+            <select id="duration" style="font-family: 'Times New Roman';">
                 <option value="60">60 seconds</option>
                 <option value="120" selected>120 seconds</option>
                 <option value="300">300 seconds</option>
             </select>
-            <button id="start-btn">Start</button>
+            <button id="start-btn" class="link-title" style="padding: 5px 15px; cursor: pointer;">Start Game</button>
         </div>
-        <p><a href="../index.html" style="font-size: 12px; color: #666;">Return to Home</a></p>
+        
+        <p style="margin-top: 20px;"><a href="../index.html">Return to Home</a></p>
     </div>
 
     <div id="game-view" class="hidden">
@@ -59,9 +63,9 @@
     </div>
 
     <div id="recap-view" class="hidden container">
-        <h1>Time's Up!</h1>
+        <h1 class="company-name">Time's Up!</h1>
         <div class="final-score">Final Score: <span id="final-score-val">0</span></div>
-        <button onclick="location.reload()">Try Again</button>
+        <button onclick="location.reload()" style="font-family: 'Times New Roman'; cursor: pointer;">Try Again</button>
     </div>
 
     <script src="trainer.js"></script>
