@@ -3,32 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institute of Mathematics, Victoria</title>
-    <link rel="stylesheet" href="../style.css">
+    <title>IMV | Arithmetic Trainer</title>
+    <link rel="stylesheet" href="trainer.css">
+    <link rel="icon" type="image/x-icon" href="../IMVyt.ico">
 </head>
 <body>
 
-    <div class="header-section">
-        <h1 class="company-name">Institute of Mathematics, Victoria</h1>
-        <div class="page-subtitle">Arithmetic Trainer</div>
+    <div id="settings-view" class="container">
+        <h1>Arithmetic Trainer</h1>
+        <p class="description">
+            A fast-paced drill. Solve as many problems as you can before time runs out.
+        </p>
+
+        <div class="settings-grid">
+            <div class="option">
+                <input type="checkbox" id="add" checked> <label for="add">Addition</label>
+                <div class="range">Range: (<input type="number" id="add-min" value="2"> to <input type="number" id="add-max" value="100">)</div>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="sub" checked> <label for="sub">Subtraction</label>
+                <div class="range">Range: Result must be positive.</div>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="mult" checked> <label for="mult">Multiplication</label>
+                <div class="range">Range: (<input type="number" id="mult-min" value="2"> to <input type="number" id="mult-max" value="12">) &times; (2 to 100)</div>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="div" checked> <label for="div">Division</label>
+                <div class="range">Multiplication problems in reverse.</div>
+            </div>
+        </div>
+
+        <div class="footer-settings">
+            Duration: 
+            <select id="duration">
+                <option value="60">60 seconds</option>
+                <option value="120" selected>120 seconds</option>
+                <option value="300">300 seconds</option>
+            </select>
+            <button id="start-btn">Start</button>
+        </div>
+        <p><a href="../index.html" style="font-size: 12px; color: #666;">Return to Home</a></p>
     </div>
 
-    <hr>
+    <div id="game-view" class="hidden">
+        <div class="stats-bar">
+            <div id="timer">Seconds left: 120</div>
+            <div id="score">Score: 0</div>
+        </div>
 
-    <div class="links-container">
-        <div class="links-column">
-            <p>Content for this section is currently being organised.</p>
-            <p><a href="../index.html">Return to Home Page</a></p>
+        <div class="problem-container">
+            <span id="problem-text">45 + 15 = </span>
+            <input type="number" id="answer-input" autocomplete="off">
         </div>
     </div>
 
-    <hr>
-
-    <div class="legal-section">
-        <div class="copyright">
-            Copyright &copy; 2026 <strong>Institute of Mathematics, Victoria</strong>
-        </div>
+    <div id="recap-view" class="hidden container">
+        <h1>Time's Up!</h1>
+        <div class="final-score">Final Score: <span id="final-score-val">0</span></div>
+        <button onclick="location.reload()">Try Again</button>
     </div>
 
+    <script>
+        const settingsView = document.getElementById('settings-view');
+        const gameView = document.getElementById('game-view');
+        const recapView = document.getElementById('recap-view');
+        const startBtn = document.getElementById('start-btn');
+        const answerInput = document.getElementById('answer-input');
+        const problemText = document.getElementById('problem-text');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+
+        let score = 0;
+        let timeLeft = 120;
+        let currentAnswer = 0;
+        let timerInterval;
+
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateProblem() {
+            const types = [];
+            if (document.getElementById('add').checked) types.push('add');
+            if (document.getElementById('sub').checked) types.push('sub');
+            if (document.getElementById('mult').checked) types.push('mult');
+            if (document.getElementById('div').checked) types.push('div');
+
+            const type = types[Math.floor(Math.random() * types.length)];
+            let a, b;
+
+            switch(type) {
+                case 'add':
+                    a = getRandom(parseInt(document.getElementById('add-min').value), parseInt(document.getElementById('add-max').value));
+                    b = getRandom(parseInt(document.getElementById('add-min').value), parseInt(document.getElementById('add-max').value));
+                    currentAnswer = a + b;
+                    problemText.innerText = `${a} + ${b} = `;
+                    break;
+                case 'sub':
+                    // Ensure positive result
+                    const maxAdd = parseInt(document.getElementById('add-max').value);
+                    const minAdd = parseInt(document.getElementById('add-min').value);
+                    a = getRandom(minAdd, maxAdd);
+                    b = getRandom(minAdd, maxAdd);
+                    const sum = a + b;
+                    currentAnswer = a;
+                    problemText.innerText = `${sum} - ${b} = `;
+                    break;
+                case 'mult':
+                    a = getRandom(parseInt(document.getElementById('mult-min').value), parseInt(document.getElementById('mult-max').value));
+                    b = getRandom(2, 100);
+                    currentAnswer = a * b;
+                    problemText.innerText = `${a} × ${b} = `;
+                    break;
+                case 'div':
+                    a = getRandom(parseInt(document.getElementById('mult-min').value), parseInt(document.getElementById('mult-max').value));
+                    b = getRandom(2, 100);
+                    const product = a * b;
+                    currentAnswer = b;
+                    problemText.innerText = `${product} ÷ ${a} = `;
+                    break;
+            }
+            answerInput.value = '';
+        }
+
+        function startGame() {
+            score = 0;
+            timeLeft = parseInt(document.getElementById('duration').value);
+            settingsView.classList.add('hidden');
+            gameView.classList.remove('hidden');
+            scoreDisplay.innerText = `Score: ${score}`;
+            generateProblem();
+            answerInput.focus();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = `Seconds left: ${timeLeft}`;
+                if (timeLeft <= 0) endGame();
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            gameView.classList.add('hidden');
+            recapView.classList.remove('hidden');
+            document.getElementById('final-score-val').innerText = score;
+        }
+
+        answerInput.addEventListener('input', () => {
+            if (parseInt(answerInput.value) === currentAnswer) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                generateProblem();
+            }
+        });
+
+        startBtn.addEventListener('click', startGame);
+    </script>
 </body>
 </html>
