@@ -94,10 +94,8 @@ li {
     text-align: center;
     font-size: 12px;
     font-weight: bold;
-    margin: 20px 0;
+    margin: 10px 0;
     color: #000080;
-    text-transform: uppercase;
-    line-height: 1.5;
 }
 
 .footer-note {
