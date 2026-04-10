@@ -23,7 +23,6 @@ function generateProblem() {
     if (document.getElementById('mult').checked) types.push('mult');
     if (document.getElementById('div').checked) types.push('div');
 
-    // Default to addition if nothing is selected
     const type = types.length > 0 ? types[Math.floor(Math.random() * types.length)] : 'add';
     let a, b;
 
@@ -64,7 +63,6 @@ function startGame() {
     score = 0;
     timeLeft = parseInt(document.getElementById('duration').value);
     
-    // Switch views
     settingsView.classList.add('hidden');
     gameView.classList.remove('hidden');
     
@@ -73,7 +71,6 @@ function startGame() {
     
     generateProblem();
     
-    // Fix for Safari focus issues
     setTimeout(() => {
         answerInput.focus();
     }, 10);
